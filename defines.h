@@ -56,6 +56,10 @@ vector<string> SplitIntoWordsNoStop(const string& text, const set<string>& stop_
     return words;
 }
 
+/** Индексирует новый документ в поисковой системе 
+ * 
+ * Индекс поисковой системы запоминает, в каких документах встречается 
+ * каждое известное ему слово (word -> document_id). */
 void AddDocument(map<string, set<int>>& word_to_documents,
                  const set<string>& stop_words,
                  int document_id,
@@ -74,8 +78,23 @@ bool LessRelevant( const pair<int, int> left, pair<int, int> right ) {
 
 typedef int Relevance;
 typedef int DocumentId;
-typedef vector< pair<DocumentId, Relevance> VectorDocumentsWithRelevance;
-// For each document returns its id and relevance
+typedef vector< pair<DocumentId, Relevance> > VectorDocumentsWithRelevance;
+/* Возвращает документы, релевантные поисковому запросу
+ * 
+ * @param word_to_documents Поисковый индекс
+ * @param stop_words Множество стоп-слов
+ * @param query Текст запроса
+ * 
+ * Документ считается релевантным запросу, если в нем встречается 
+ * любое из слов запроса. Величина релевантности выражается целым числом - 
+ * количеством различных слов запроса, которые есть в документе.
+ * 
+ * Например, по запросу 
+ *     funny fat cat
+ * у документа 
+ *     fat cat ate a fat rat on a mat
+ * релевантность = 2, т.к. слова "fat" и "cat" в нем есть. 
+ * Повторения слов в документе (например, "fat") не имеют значения. */
 VectorDocumentsWithRelevance FindAllDocuments(
         const map<string, set<int>>& word_to_documents,
         const set<string>& stop_words,

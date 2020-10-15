@@ -4,6 +4,7 @@ project(lesson5
 	LANGUAGES CXX)
 
 add_executable(app main.cpp)
+target_compile_features(app PRIVATE cxx_std_17)
 
 # tell CMake to use CTest extension
 enable_testing()
@@ -13,6 +14,7 @@ add_subdirectory(googletest EXCLUDE_FROM_ALL)
 # GoogleTest, Boost.Test, QtTest or whatever framework you use
 add_executable(my_test
                test_main.cpp)
+target_compile_features(my_test PRIVATE cxx_std_17)
 
 # depending on the framework, you need to link to it
 target_link_libraries(my_test
