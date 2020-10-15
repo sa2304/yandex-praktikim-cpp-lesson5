@@ -69,22 +69,22 @@ void AddDocument(map<string, set<int>>& word_to_documents,
     }
 }
 
-bool LessRelevant( const pair<int, int> left, pair<int, int> right ) {
-	const auto [left_id, left_relevance] = left;
-	const auto [right_id, right_relevance] = right;
+typedef int Relevance;
+typedef int DocumentId;
+
+bool LessRelevant( const pair<Relevance, DocumentId> left, pair<Relevance, DocumentId> right ) {
+  const auto [left_relevance, left_id] = left;
+  const auto [right_relevance, right_id] = right;
 	return (left_relevance < right_relevance);
 }
 
-
-typedef int Relevance;
-typedef int DocumentId;
-typedef vector< pair<DocumentId, Relevance> > VectorDocumentsWithRelevance;
-/* Возвращает документы, релевантные поисковому запросу
+/** Возвращает документы, релевантные поисковому запросу
  * 
  * @param word_to_documents Поисковый индекс
  * @param stop_words Множество стоп-слов
  * @param query Текст запроса
  * 
+ * @returns Пары <document_id, relevance>
  * Документ считается релевантным запросу, если в нем встречается 
  * любое из слов запроса. Величина релевантности выражается целым числом - 
  * количеством различных слов запроса, которые есть в документе.
@@ -95,7 +95,7 @@ typedef vector< pair<DocumentId, Relevance> > VectorDocumentsWithRelevance;
  *     fat cat ate a fat rat on a mat
  * релевантность = 2, т.к. слова "fat" и "cat" в нем есть. 
  * Повторения слов в документе (например, "fat") не имеют значения. */
-VectorDocumentsWithRelevance FindAllDocuments(
+vector< pair<Relevance, DocumentId> > FindAllDocuments(
         const map<string, set<int>>& word_to_documents,
         const set<string>& stop_words,
         const string& query) {
@@ -110,9 +110,9 @@ VectorDocumentsWithRelevance FindAllDocuments(
         }
     }
 
-    VectorDocumentsWithRelevance found_documents;
+    vector< pair<Relevance, DocumentId> > found_documents;
     for (auto [document_id, relevance] : document_to_relevance) {
-        found_documents.push_back({document_id, relevance});
+      found_documents.push_back({relevance, document_id});
     }
 	sort(found_documents.begin(), found_documents.end(), LessRelevant);
 	reverse(found_documents.begin(), found_documents.end());
@@ -120,11 +120,12 @@ VectorDocumentsWithRelevance FindAllDocuments(
     return found_documents;
 }
 
-vector<pair<int, int>> FindTopDocuments(
+/** Возвращает MAX_RESULT_DOCUMENT_COUNT наиболее релевантных запросу документов */
+vector< pair<Relevance, DocumentId> > FindTopDocuments(
         const map<string, set<int>>& word_to_documents,
         const set<string>& stop_words,
         const string& query) {
-		vector<pair<int, int>> all_relevant_documents = FindAllDocuments(word_to_documents, stop_words, query);
+		vector< pair<Relevance, DocumentId> > all_relevant_documents = FindAllDocuments(word_to_documents, stop_words, query);
 		
 		return vector(all_relevant_documents.begin(), all_relevant_documents.begin() + MAX_RESULT_DOCUMENT_COUNT);
 }

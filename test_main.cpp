@@ -34,13 +34,13 @@ TEST_F(TestLesson5, testLessonExample)
 
 	const string query = "funny fat cat on a mat with rat"s;
 
-	VectorDocumentsWithRelevance vec_found = FindTopDocuments(word_to_documents, stop_words, query);
-	VectorDocumentsWithRelevance vec_expected = {
-		{ 0, 3 },
-		{ 2, 2 },
-		{ 1, 2 },
-		{ 5, 1 },
-		{ 4, 1 }
+	vector< pair<Relevance, DocumentId> > vec_found = FindTopDocuments(word_to_documents, stop_words, query);
+	vector< pair<Relevance, DocumentId> > vec_expected = {
+	   { 3, 0 },
+	   { 2, 2 },
+	   { 2, 1 },
+	   { 1, 5 },
+	   { 1, 4 }
 	};
 	EXPECT_EQ(vec_found, vec_expected);
 }
