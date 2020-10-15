@@ -15,7 +15,7 @@ int main() {
     }
 
     const string query = ReadLine();
-    for (auto [document_id, relevance] : FindTopDocuments(word_to_documents, stop_words, query)) {
+    for (auto [relevance, document_id] : FindTopDocuments(word_to_documents, stop_words, query)) {
         cout << "{ document_id = "s << document_id << ", relevance = "s << relevance << " }"s << endl;
     }
 }
